@@ -15,6 +15,7 @@ retuve = { git = "https://github.com/radoss-org/retuve.git" }
 ultralytics = "^8.2.48"
 pytest-xdist = "^3.6.1"
 uvicorn = "^0.34.0"
+black = "^25.1.0"
 
 [tool.poe.tasks]
 test = "poetry run pytest -vv -n 4 ./tests"
