@@ -30,7 +30,6 @@ jobs:
       run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Create .venv directory
-      # Ensure the .venv directory exists before restoring the cache
       run: mkdir -p .venv
 
     - name: Cache Poetry dependencies
