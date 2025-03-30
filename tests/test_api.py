@@ -12,10 +12,7 @@ from retuve.defaults.hip_configs import default_US
 from retuve.keyphrases.enums import HipMode
 from retuve.testdata import Cases, download_case
 
-from retuve_yolo_plugin.ultrasound import (
-    get_yolo_model_us,
-    yolo_predict_dcm_us,
-)
+from retuve_yolo_plugin.ultrasound import get_yolo_model_us, yolo_predict_dcm_us
 
 default_US.batch.hip_mode = HipMode.US3D
 default_US.batch.mode_func = yolo_predict_dcm_us
@@ -76,22 +73,22 @@ def send_request(url, file_path, data):
 config = uvicorn.Config(app, host="127.0.0.1", port=8000, log_level="info")
 server = Server(config=config)
 
-dcm_file = download_case(Cases.ULTRASOUND_DICOM)[0]
-
-tests = [
-    {
-        "file_path": dcm_file,
-        "data": {
-            "keyphrase": "ultrasound",
-            "api_token": "password",
-        },
-    },
-]
-
 app_init(app)
 
 
 def test_data_creation():
+    dcm_file = download_case(Cases.ULTRASOUND_DICOM)[0]
+
+    tests = [
+        {
+            "file_path": dcm_file,
+            "data": {
+                "keyphrase": "ultrasound",
+                "api_token": "password",
+            },
+        },
+    ]
+
     with server.run_in_thread():
         url = "http://localhost:8000/api/model/"
         for test in tests:
