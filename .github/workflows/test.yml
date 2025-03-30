@@ -11,14 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Check out code
+      uses: actions/checkout@v3
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-        cache: 'poetry'
-        cache-dependency-path: '**/poetry.lock'
 
     - name: Install Poetry
       uses: snok/install-poetry@v1
@@ -27,10 +26,26 @@ jobs:
         virtualenvs-create: true
         virtualenvs-in-project: true
 
+    - name: Add Poetry to PATH
+      run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Create .venv directory
+      # Ensure the .venv directory exists before restoring the cache
+      run: mkdir -p .venv
+
+    - name: Cache Poetry dependencies
+      uses: actions/cache@v3
+      with:
+        path: .venv
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
+          ${{ runner.os }}-
+
     - name: Install dependencies
       run: |
         poetry install
-        poetry run pip install poethepoet
+        pip install poethepoet
 
     - name: Check code formatting with black
       run: |
