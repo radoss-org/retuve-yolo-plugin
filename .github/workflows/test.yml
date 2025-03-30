@@ -1,0 +1,45 @@
+name: Lint & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        cache: 'poetry'
+        cache-dependency-path: '**/poetry.lock'
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.5.1
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Install dependencies
+      run: |
+        poetry install
+        poetry run pip install poethepoet
+
+    - name: Check code formatting with black
+      run: |
+        poetry run poe format --check
+
+    - name: Generate test data
+      run: |
+        poetry run poe testgen
+
+    - name: Run tests
+      run: |
+        poetry run poe test

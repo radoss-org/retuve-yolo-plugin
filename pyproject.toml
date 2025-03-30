@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "retuve_yolo_plugin"
+version = "0.2.0"
+description = ""
+authors = ["Sharpz7 <adam.mcarthur62@gmail.com>"]
+readme = "README.md"
+
+[build-system]
+requires = ["poetry-core>=1.0.8"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+retuve = { git = "https://github.com/radoss-org/retuve.git" }
+ultralytics = "^8.2.48"
+pytest-xdist = "^3.6.1"
+uvicorn = "^0.34.0"
+
+[tool.poe.tasks]
+test = "poetry run pytest -vv -n 4 ./tests"
+testgen = [
+    { cmd = "poetry install" },
+    { cmd = "poetry run python ./tests/_get_test_data.py" },
+]
+format = "poetry run black ."  # Add this line to run black on the entire codebase
+
+[tool.pytest.ini_options]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'

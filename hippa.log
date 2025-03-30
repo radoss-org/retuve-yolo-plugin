@@ -1,0 +1,35 @@
+2025-03-29 23:46:00,767 - hippa - INFO - Validated and Uploaded PHI078_2_R.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-29 23:46:00,790 - hippa - ERROR - Error in processing PHI078_2_R.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-29 23:46:00,790 - hippa - ERROR - Traceback (most recent call last):
+  File "/home/amcarth1/.cache/pypoetry/virtualenvs/retuve-yolo-plugin-73RQk4dT-py3.10/lib/python3.10/site-packages/retuve/app/routes/models.py", line 89, in analyse_image
+    result = retuve_run(
+  File "/home/amcarth1/.cache/pypoetry/virtualenvs/retuve-yolo-plugin-73RQk4dT-py3.10/lib/python3.10/site-packages/retuve/funcs.py", line 558, in retuve_run
+    raise ValueError(f"Invalid hip_mode. {hip_mode}")
+ValueError: Invalid hip_mode. None
+
+2025-03-29 23:55:39,699 - hippa - INFO - Validated and Uploaded PHI078_2_R.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-29 23:56:14,043 - hippa - INFO - Successfully processed PHI078_2_R.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:00:06,909 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:00:17,185 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:01:24,541 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:01:34,689 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:07:12,186 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:07:22,465 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:09:06,679 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:09:16,710 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:27:43,728 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:27:54,136 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:29:28,341 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:29:38,542 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:35:24,172 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:35:34,484 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:37:38,944 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:37:51,070 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:44:44,877 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:44:57,868 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:45:56,357 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:46:08,551 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:48:16,095 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:48:28,105 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:49:40,098 - hippa - INFO - Validated and Uploaded 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
+2025-03-30 00:49:51,778 - hippa - INFO - Successfully processed 171551.dcm with keyphrase ultrasound from host: 127.0.0.1.
