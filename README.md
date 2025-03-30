@@ -1,5 +1,7 @@
 # Retuve YOLO Segmentation AI Plugin
 
+![tests](https://github.com/radoss-org/retuve-yolo-plugin/actions/workflows/test.yml/badge.svg)
+
 __For more information on Retuve, see https://github.com/radoss-org/retuve__
 
 This codebase has the AI Plugin for Retuve, which uses Radiopedia data from [The Open Hip Dataset](https://github.com/radoss-org/open-hip-dysplasia) to train.
