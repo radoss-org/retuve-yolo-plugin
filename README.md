@@ -12,6 +12,8 @@ This means that you cannot use this codebase for any commercial purposes, you mu
 
 The codes dual licences are in the [LICENSE](LICENSE) file and the [LICENSE2](LICENSE2) file.
 
+We also use
+
 ## Installation
 
 To install the plugin, you can use the following command:
