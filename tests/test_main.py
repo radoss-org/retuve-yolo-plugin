@@ -8,6 +8,9 @@ from retuve.testdata import Cases, download_case
 
 from retuve_yolo_plugin.ultrasound import yolo_predict_dcm_us
 from retuve_yolo_plugin.xray import yolo_predict_xray
+from retuve_yolo_plugin.xray_v2 import (
+    yolo_predict_xray as yolo_predict_xray_v2,
+)
 
 
 def test_ultrasound():
@@ -39,6 +42,24 @@ def test_xray():
         img,
         keyphrase=default_xray,
         modes_func=yolo_predict_xray,
+        modes_func_kwargs_dict={},
+    )
+
+    assert hip.metrics[0].value > 0
+
+
+def test_xray_v2():
+
+    jpg_file = download_case(Cases.XRAY_JPG)[0]
+
+    default_xray.device = "cpu"
+
+    img = Image.open(jpg_file)
+
+    hip, *_ = analyse_hip_xray_2D(
+        img,
+        keyphrase=default_xray,
+        modes_func=yolo_predict_xray_v2,
         modes_func_kwargs_dict={},
     )
 

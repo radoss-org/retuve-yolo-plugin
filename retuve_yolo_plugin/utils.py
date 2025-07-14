@@ -66,6 +66,62 @@ def predict(
     return all_results
 
 
+def yolo_predict_pose(
+    images,
+    keyphrase,
+    default_weights,
+    model=None,
+    config=None,
+    imgsz=512,
+    conf=0.8,
+    stream=False,
+):
+    if not config:
+        config = Config.get_config(keyphrase)
+
+    landmark_results = []
+
+    if not model:
+        from ultralytics import YOLO
+
+        model = YOLO(default_weights)
+        model.to(config.device)
+
+    results = predict(
+        images=images,
+        model=model,
+        imgsz=imgsz,
+        device=config.device,
+        conf=conf,
+        stream=stream,
+    )
+
+    for result in results:
+
+        try:
+            landmarks = result.keypoints.xy[0].cpu().numpy()
+        except KeyError:
+            landmarks = [None, None, None, None, None, None, None, None]
+
+        if len(landmarks) != 8:
+            landmarks = [None, None, None, None, None, None, None, None]
+
+        landmark_results.append(landmarks)
+
+    landmark_names = [
+        "pel_l_o",
+        "pel_l_i",
+        "fem_head_l",
+        "fem_l",
+        "pel_r_o",
+        "pel_r_i",
+        "fem_head_r",
+        "fem_r",
+    ]
+
+    return landmark_results, landmark_names
+
+
 def shared_yolo_predict(
     images,
     keyphrase,

@@ -12,6 +12,8 @@ This means that you cannot use this codebase for any commercial purposes, you mu
 
 The codes dual licences are in the [LICENSE](LICENSE) file and the [LICENSE2](LICENSE2) file.
 
+**Note: Version 2 addition - we now also use the MTDDH dataset (https://www.nature.com/articles/s41597-025-05146-x) for the v2 x-ray model.**
+
 ## Installation
 
 To install the plugin, you can use the following command:
