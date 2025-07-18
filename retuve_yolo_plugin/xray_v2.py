@@ -53,7 +53,7 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
         WEIGHTS,
         model,
         config,
-        imgsz=512,
+        imgsz=800,
         conf=0.6,
         stream=stream,
     )
@@ -61,17 +61,16 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
     for i, landmarks in enumerate(landmarks_list):
         landmarks_obj = LandmarksXRay()
 
-        landmarks_obj.fem_l, landmarks_obj.pel_l_o, landmarks_obj.pel_l_i = (
-            landmarks[1],
-            landmarks[0],
-            landmarks[1],
-        )
-        landmarks_obj.fem_r, landmarks_obj.pel_r_o, landmarks_obj.pel_r_i = (
-            landmarks[5],
-            landmarks[4],
-            landmarks[5],
-        )
-
+        (
+            landmarks_obj.pel_l_o,
+            landmarks_obj.pel_l_i,
+            landmarks_obj.fem_l,
+            landmarks_obj.h_point_l,
+            landmarks_obj.pel_r_o,
+            landmarks_obj.pel_r_i,
+            landmarks_obj.fem_r,
+            landmarks_obj.h_point_r,
+        ) = landmarks
         landmark_results.append(landmarks_obj)
 
         seg_results.append(

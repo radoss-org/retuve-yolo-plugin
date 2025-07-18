@@ -59,6 +59,7 @@ def predict(
         results = model.predict(
             chunk, imgsz=imgsz, conf=conf, verbose=False, stream=stream
         )
+
         all_results.extend(results)  # Combine results from all chunks
 
     ulogger.info(f"YOLO Segmentation model time: {time.time() - start:.2f}s")
@@ -72,8 +73,8 @@ def yolo_predict_pose(
     default_weights,
     model=None,
     config=None,
-    imgsz=512,
-    conf=0.8,
+    imgsz=800,
+    conf=0.6,
     stream=False,
 ):
     if not config:
@@ -96,26 +97,66 @@ def yolo_predict_pose(
         stream=stream,
     )
 
+    # Prepare storage for best detections
+    best_detections = {
+        "left": {
+            0: {"keypoints": [None, None]},
+            1: {"keypoints": [None, None]},
+        },
+        "right": {
+            0: {"keypoints": [None, None]},
+            1: {"keypoints": [None, None]},
+        },
+    }
+
     for result in results:
+        boxes = result.boxes.cpu().numpy()
+        keypoints_list = result.keypoints.xy.cpu().numpy()
+        classes = result.boxes.cls.cpu().numpy()
+        confs = result.boxes.conf.cpu().numpy()
+        orig_shape = result.boxes.orig_shape  # (height, width)
+        img_center_x = orig_shape[1] / 2
 
-        try:
-            landmarks = result.keypoints.xy[0].cpu().numpy()
-        except KeyError:
-            landmarks = [None, None, None, None, None, None, None, None]
+        for box, keypoints, clss, conf in zip(
+            boxes, keypoints_list, classes, confs
+        ):
+            # Get box center x
+            box = box.xyxy[0]
+            x1, y1, x2, y2, *_ = box
+            box_center_x = (x1 + x2) / 2
 
-        if len(landmarks) != 8:
-            landmarks = [None, None, None, None, None, None, None, None]
+            # Decide side
+            side = "left" if box_center_x < img_center_x else "right"
 
-        landmark_results.append(landmarks)
+            # For each class, keep only the highest confidence detection per side
+            if conf > best_detections[side][clss].get("conf", False):
+                best_detections[side][int(clss)] = {
+                    "box": box,
+                    "keypoints": keypoints,
+                    "conf": conf,
+                }
+
+        frame_landmarks = [
+            best_detections["left"][0]["keypoints"],
+            best_detections["left"][1]["keypoints"],
+            best_detections["right"][0]["keypoints"],
+            best_detections["right"][1]["keypoints"],
+        ]
+
+        frame_landmarks = [
+            item for sublist in frame_landmarks for item in sublist
+        ]
+
+        landmark_results.append(frame_landmarks)
 
     landmark_names = [
         "pel_l_o",
         "pel_l_i",
-        "fem_head_l",
+        "h_point_l",
         "fem_l",
         "pel_r_o",
         "pel_r_i",
-        "fem_head_r",
+        "h_point_r",
         "fem_r",
     ]
 
