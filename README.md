@@ -12,7 +12,20 @@ This means that you cannot use this codebase for any commercial purposes, you mu
 
 The codes dual licences are in the [LICENSE](LICENSE) file and the [LICENSE2](LICENSE2) file.
 
-**Note: Version 2 addition - we now also use the MTDDH dataset (https://www.nature.com/articles/s41597-025-05146-x) for the v2 x-ray model.**
+
+## UPDATE - X-Ray Version 2
+
+We have added a new version of the x-ray model, which is trained on the MTDDH dataset (https://www.nature.com/articles/s41597-025-05146-x). We suggest reading this datasets description as it is very diverse and of mixed quality.
+
+This model is available in the `retuve_yolo_plugin.xray_v2` module.
+
+The model is trained on the MTDDH dataset, which is a dataset of 1000's of x-rays of the hip.
+
+We show initial results with a 50/50 train/val split with an F1 Score of `0.951` for seperating IHDI Grade 1 from 2, 3 and 4. We also show a mean error in the acetabular angle of `3` degrees, and median of `2.4` degrees.
+
+![MTDDH](docs/combined_all_plots.png)
+
+It is expected that with a different non-pose model, better results can be achieved.
 
 ## Installation
 
