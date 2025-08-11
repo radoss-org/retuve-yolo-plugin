@@ -13,7 +13,35 @@ This means that you cannot use this codebase for any commercial purposes, you mu
 The codes dual licences are in the [LICENSE](LICENSE) file and the [LICENSE2](LICENSE2) file.
 
 
-## UPDATE - X-Ray Version 2
+## Initial Results
+
+![Combined](docs/combined_all_plots.png)
+
+### Detailed Performance Metrics
+
+#### X-ray Validation Results
+
+| Metric | Left Side | Right Side |
+|--------|-----------|------------|
+| ICC Acetabular Index | 0.860 (95% CI 0.830-0.880) | 0.845 (95% CI 0.810-0.870) |
+| ICC Wilberg Index | 0.891 (95% CI 0.860-0.910) | 0.902 (95% CI 0.860-0.930) |
+
+*X-ray validation results for acetabular index and Wilberg angle measurements*
+
+#### Classification Performance
+
+For X-ray DDH classification, Retuve demonstrated strong performance in distinguishing Grade 1 IHDI from Grades 2, 3, and 4:
+
+| Classification Task | F1 Score | Recall | Precision |
+|---------------------|----------|--------|-----------|
+| Grade 1 vs. Grades 2-4 IHDI | 0.940 | 0.914 | 0.967 |
+| Per-Class (All Grades) | 0.593 | 0.570 | 0.637 |
+
+*Classification performance for DDH grading on X-ray images*
+
+**Note:** For the Grade 1 vs. Grades 2-4 classification analysis, cases where Retuve returned a result of "0" were logically classified as IHDI Grade 2 or higher, as a "0" result represents a Retuve processing error and indicates the system's inability to confidently classify the case as normal (Grade 1).
+
+## UPDATE - X-Ray Version 2 - Landmark Detection
 
 We have added a new version of the x-ray model, which is trained on the MTDDH dataset (https://www.nature.com/articles/s41597-025-05146-x). We suggest reading this datasets description as it is very diverse and of mixed quality.
 
@@ -25,7 +53,7 @@ We show initial results with a 50/50 train/val split with an F1 Score of `0.951`
 
 ![MTDDH](docs/combined_all_plots.png)
 
-It is expected that with a different non-pose model, better results can be achieved.
+It is expected that with a different non-pose model, better results can be achieved. Although the ICC is lower than v1, the F1-Score for separating IHDI Grade 1 from 2, 3 and 4 is higher - therefore this model should be preferred for grading IHDI.
 
 ## Installation
 

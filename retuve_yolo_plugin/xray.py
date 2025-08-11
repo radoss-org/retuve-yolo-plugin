@@ -13,6 +13,7 @@ from .utils import FILEDIR, shared_yolo_predict
 from .xray_utils import fit_triangle_to_mask
 
 WEIGHTS = f"{FILEDIR}/weights/hip-yolo-xray.pt"
+
 # check weights file exists
 if not os.path.exists(WEIGHTS):
     sys.exit(f"Error: {WEIGHTS} does not exist")
@@ -50,7 +51,7 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
         WEIGHTS,
         model,
         config,
-        imgsz=512,
+        imgsz=1000,
         conf=0.6,
         stream=stream,
     )
@@ -77,21 +78,21 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
         tri_1 = seg_frame_objects[0]
         tri_2 = seg_frame_objects[1]
 
-        fem_l, pel_l_o, pel_l_i, fem_r, pel_r_o, pel_r_i = fit_triangle_to_mask(
+        h_point_l, pel_l_o, pel_l_i, h_point_r, pel_r_o, pel_r_i = fit_triangle_to_mask(
             tri_1.points, tri_2.points
         )
 
-        if fem_l is None:
+        if h_point_l is None:
             landmark_results.append(landmarks)
             continue
 
-        landmarks.fem_l, landmarks.pel_l_o, landmarks.pel_l_i = (
-            pel_l_i,
+        landmarks.h_point_l, landmarks.pel_l_o, landmarks.pel_l_i = (
+            h_point_l,
             pel_l_o,
             pel_l_i,
         )
-        landmarks.fem_r, landmarks.pel_r_o, landmarks.pel_r_i = (
-            pel_r_i,
+        landmarks.h_point_r, landmarks.pel_r_o, landmarks.pel_r_i = (
+            h_point_r,
             pel_r_o,
             pel_r_i,
         )
