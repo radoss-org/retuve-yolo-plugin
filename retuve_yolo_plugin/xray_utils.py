@@ -25,8 +25,8 @@ def fit_triangle_to_mask(tri_1_points, tri_2_points):
     if tri_left[0][0] > tri_right[0][0]:
         tri_left, tri_right = tri_right, tri_left
 
-    fem_l, pel_l_o, pel_l_i = define_points(tri_left)
-    fem_r, pel_r_o, pel_r_i = define_points(tri_right)
+    fem_l, pel_l_o, pel_l_i = define_points(tri_left, "left")
+    fem_r, pel_r_o, pel_r_i = define_points(tri_right, "right")
 
     return fem_l, pel_l_o, pel_l_i, fem_r, pel_r_o, pel_r_i
 
@@ -54,19 +54,24 @@ def find_triangle_from_edges(points):
         return None, 0  # No triangle found
 
 
-def define_points(triangle):
+def define_points(triangle, side):
     # Convert all points to tuples
     triangle = [(int(point[0]), int(point[1])) for point in triangle]
 
-    # Find the lowest point in the triangle
-    lowest_point = max(triangle, key=lambda point: point[1])
-    triangle.remove(lowest_point)
-
-    # Find the leftmost point in the triangle
+    # Find the highest point in the triangle
     highest_point = min(triangle, key=lambda point: point[1])
     triangle.remove(highest_point)
+
+    # If we are on the left side, find the rightmost point
+    if side == "left":
+        inner_point = max(triangle, key=lambda point: point[0])
+    # If we are on the right side, find the leftmost point
+    else:
+        inner_point = min(triangle, key=lambda point: point[0])
+
+    triangle.remove(inner_point)
 
     # The last point is the one not picked
     remaining_point = triangle[0]
 
-    return lowest_point, highest_point, remaining_point
+    return remaining_point, highest_point, inner_point
