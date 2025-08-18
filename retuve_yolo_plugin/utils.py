@@ -29,7 +29,7 @@ def predict(
     device=None,
     model=None,
     stream=False,
-    chunk_size=200,  # Default chunk size
+    chunk_size=1,  # Default chunk size
 ):
     """
     Predict the DICOM using a YOLO model with chunking support.
@@ -46,7 +46,6 @@ def predict(
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     start = time.time()
-    model.to(device)
 
     # Function to process images in chunks
     def process_in_chunks(images, chunk_size):
@@ -57,9 +56,12 @@ def predict(
 
     for chunk in process_in_chunks(images, chunk_size):
         results = model.predict(
-            chunk, imgsz=imgsz, conf=conf, verbose=False, stream=stream
+            chunk,
+            imgsz=imgsz,
+            conf=conf,
+            verbose=False,
+            stream=stream,
         )
-
         all_results.extend(results)  # Combine results from all chunks
 
     ulogger.info(f"YOLO Segmentation model time: {time.time() - start:.2f}s")
@@ -86,7 +88,8 @@ def yolo_predict_pose(
         from ultralytics import YOLO
 
         model = YOLO(default_weights)
-        model.to(config.device)
+        if "onnx" not in default_weights:
+            model.to(config.device)
 
     results = predict(
         images=images,
@@ -117,7 +120,9 @@ def yolo_predict_pose(
         orig_shape = result.boxes.orig_shape  # (height, width)
         img_center_x = orig_shape[1] / 2
 
-        for box, keypoints, clss, conf in zip(boxes, keypoints_list, classes, confs):
+        for box, keypoints, clss, conf in zip(
+            boxes, keypoints_list, classes, confs
+        ):
             # Get box center x
             box = box.xyxy[0]
             x1, y1, x2, y2, *_ = box
@@ -141,7 +146,9 @@ def yolo_predict_pose(
             best_detections["right"][1]["keypoints"],
         ]
 
-        frame_landmarks = [item for sublist in frame_landmarks for item in sublist]
+        frame_landmarks = [
+            item for sublist in frame_landmarks for item in sublist
+        ]
 
         landmark_results.append(frame_landmarks)
 
@@ -178,8 +185,9 @@ def shared_yolo_predict(
     if not model:
         from ultralytics import YOLO
 
-        model = YOLO(default_weights)
-        model.to(config.device)
+        model = YOLO(default_weights, task="segment")
+        if "onnx" not in default_weights:
+            model.to(config.device)
 
     attempts = 0
     while attempts < 10:

@@ -10,7 +10,7 @@ from retuve.logs import log_timings
 
 from .utils import FILEDIR, shared_yolo_predict
 
-WEIGHTS = f"{FILEDIR}/weights/hip-yolo-us.pt"
+WEIGHTS = f"{FILEDIR}/weights/hip-yolo-us.onnx"
 # check weights file exists
 if not os.path.exists(WEIGHTS):
     sys.exit(f"Error: {WEIGHTS} does not exist")
@@ -19,8 +19,9 @@ if not os.path.exists(WEIGHTS):
 def get_yolo_model_us(config):
     from ultralytics import YOLO
 
-    model = YOLO(WEIGHTS)
-    model.to(config.device)
+    model = YOLO(WEIGHTS, task="segment")
+    if "onnx" not in WEIGHTS:
+        model.to(config.device)
 
     return model
 
