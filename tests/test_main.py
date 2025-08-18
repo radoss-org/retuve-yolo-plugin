@@ -89,4 +89,4 @@ def test_xray_v2():
 
 
 if __name__ == "__main__":
-    test_ultrasound()
+    test_ultrasound_call_model_first()

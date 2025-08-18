@@ -9,4 +9,5 @@ model.export(
     device="cpu",
     simplify=False,
     nms=True,
+    dynamic=False,
 )

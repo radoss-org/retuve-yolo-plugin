@@ -11,6 +11,7 @@ from retuve.logs import log_timings
 from .utils import FILEDIR, shared_yolo_predict
 
 WEIGHTS = f"{FILEDIR}/weights/hip-yolo-us.onnx"
+# WEIGHTS = f"{FILEDIR}/weights/hip-yolo-us.pt"
 # check weights file exists
 if not os.path.exists(WEIGHTS):
     sys.exit(f"Error: {WEIGHTS} does not exist")
