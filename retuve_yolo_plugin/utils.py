@@ -25,7 +25,7 @@ def predict(
     images,
     weights=None,
     imgsz=512,
-    conf=0.7,
+    conf=0.8,
     device=None,
     model=None,
     stream=False,
@@ -120,7 +120,9 @@ def yolo_predict_pose(
         orig_shape = result.boxes.orig_shape  # (height, width)
         img_center_x = orig_shape[1] / 2
 
-        for box, keypoints, clss, conf in zip(boxes, keypoints_list, classes, confs):
+        for box, keypoints, clss, conf in zip(
+            boxes, keypoints_list, classes, confs
+        ):
             # Get box center x
             box = box.xyxy[0]
             x1, y1, x2, y2, *_ = box
@@ -144,7 +146,9 @@ def yolo_predict_pose(
             best_detections["right"][1]["keypoints"],
         ]
 
-        frame_landmarks = [item for sublist in frame_landmarks for item in sublist]
+        frame_landmarks = [
+            item for sublist in frame_landmarks for item in sublist
+        ]
 
         landmark_results.append(frame_landmarks)
 
