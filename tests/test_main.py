@@ -52,6 +52,28 @@ def test_ultrasound_call_model_first():
     assert hip_datas.grafs_hip.metrics[0].value > 0
 
 
+def test_ultrasound_custom():
+    dcm_file = download_case(Cases.ULTRASOUND_DICOM)[0]
+
+    default_US.device = "cpu"
+
+    dcm = pydicom.dcmread(dcm_file)
+
+    model = get_yolo_model_us(
+        default_US,
+        weights_path="https://github.com/radoss-org/retuve-yolo-plugin/raw/refs/heads/main/retuve_yolo_plugin/weights/hip-yolo-us.pt",
+    )
+
+    hip_datas, video, *_ = analyse_hip_3DUS(
+        dcm,
+        keyphrase=default_US,
+        modes_func=yolo_predict_dcm_us,
+        modes_func_kwargs_dict={"model": model, "imgsz": 512, "conf": 0.6},
+    )
+
+    assert hip_datas.grafs_hip.metrics[0].value > 0
+
+
 def test_xray():
 
     jpg_file = download_case(Cases.XRAY_JPG)[0]

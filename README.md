@@ -15,9 +15,21 @@ The codes dual licences are in the [LICENSE](LICENSE) file and the [LICENSE2](LI
 
 ## Initial Results
 
-![Combined](docs/combined_all_plots.png)
+For a more detailed look at the validation results, see:
+- [Ultrasound Validation Results](docs/ultrasound_val.md)
+- [X-ray Validation Results](docs/xray_val.md)
 
 ### Detailed Performance Metrics
+
+#### Ultrasound Validation Results (Limited Cases)
+
+| Metric | Results |
+|--------|-----------|
+| Alpha Angle ICC | 0.86 (95% CI -0.07-0.81) |
+| Coverage ICC | 0.92 (95% CI 0.84-0.96) |
+
+*Ultrasound validation results for alpha angle and coverage measurements*
+
 
 #### X-ray Validation Results
 
@@ -41,19 +53,32 @@ For X-ray DDH classification, Retuve demonstrated strong performance in distingu
 
 **Note:** For the Grade 1 vs. Grades 2-4 classification analysis, cases where Retuve returned a result of "0" were logically classified as IHDI Grade 2 or higher, as a "0" result represents a Retuve processing error and indicates the system's inability to confidently classify the case as normal (Grade 1).
 
-## UPDATE - X-Ray Version 2 - Landmark Detection
+### F1 vs Confidence Score Analysis
 
-We have added a new version of the x-ray model, which is trained on the MTDDH dataset (https://www.nature.com/articles/s41597-025-05146-x). We suggest reading this datasets description as it is very diverse and of mixed quality.
+The F1 vs confidence score plots shown in the detailed validation results help users select optimal confidence thresholds for their specific use case. The F1 score balances precision (accuracy of positive predictions) and recall (ability to find all positive cases), providing a single metric to evaluate model performance across different confidence levels.
 
-This model is available in the `retuve_yolo_plugin.xray_v2` module.
+**Why this matters for inference:**
+- **Screening applications**: Lower thresholds (0.2-0.4) maximize recall to avoid missing cases
+- **Diagnostic applications**: Higher thresholds (0.5-0.7) maximize precision for confident diagnoses
+- **Research applications**: Mid-range thresholds (0.3-0.5) provide balanced performance
 
-The model is trained on the MTDDH dataset, which is a dataset of 1000's of x-rays of the hip.
+Users should select confidence thresholds based on their clinical priorities: whether it's more important to catch all potential cases (high recall) or to minimize false positives (high precision).
 
-We show initial results with a 50/50 train/val split with an F1 Score of `0.951` for seperating IHDI Grade 1 from 2, 3 and 4. We also show a mean error in the acetabular angle of `3` degrees, and median of `2.4` degrees.
+### Training Parameters Summary
 
-![MTDDH](docs/combined_all_plots.png)
+| Parameter | Ultrasound | X-ray Segmentation | X-ray Pose |
+|-----------|------------|-------------------|------------|
+| **Model Architecture** | YOLOv11n-seg | YOLOv11n-seg | YOLOv11n-pose |
+| **Task** | Segmentation | Segmentation | Pose Estimation |
+| **Epochs** | 100 | 200 | 100 |
+| **Batch Size** | 4 | 16 | 16 |
+| **Image Size** | 500px | 800px | 800px |
+| **Learning Rate** | 0.01 | 0.01 | 0.01 |
+| **Data Augmentation** | Minimal | Extensive | Moderate |
+| **Key Augmentations** | HSV (0.1), Rotation (5°) | HSV (0.7), Mosaic, AutoAug | HSV (0.7), AutoAug, Flip |
+| **Device** | cuda:4 | cuda:1 | Auto |
 
-It is expected that with a different non-pose model, better results can be achieved. Although the ICC is lower than v1, the F1-Score for separating IHDI Grade 1 from 2, 3 and 4 is higher - therefore this model should be preferred for grading IHDI.
+*Training configurations optimized for each modality's specific requirements and dataset characteristics*
 
 ## Installation
 

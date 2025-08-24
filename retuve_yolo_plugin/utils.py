@@ -25,7 +25,7 @@ def predict(
     images,
     weights=None,
     imgsz=512,
-    conf=0.7,
+    conf=0.8,
     device=None,
     model=None,
     stream=False,
