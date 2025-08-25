@@ -81,15 +81,13 @@ def _convert_github_url(url: str) -> str:
             token = os.getenv("GITHUB_PAT")
 
             if token:
-                return f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
+                return (
+                    f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
+                )
             else:
                 return f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_path}"
 
-    if (
-        "raw.githubusercontent.com" in url
-        or "/raw/" in url
-        or "api.github.com" in url
-    ):
+    if "raw.githubusercontent.com" in url or "/raw/" in url or "api.github.com" in url:
         return url
 
     return url
@@ -105,23 +103,17 @@ def get_yolo_model_us(config, weights_path=None, download_if_missing=True):
     if target_weights.startswith("http") and download_if_missing:
         print(f"Custom weights URL provided: {target_weights}")
         if not _download_weights(target_weights):
-            raise FileNotFoundError(
-                f"Failed to download weights from {target_weights}"
-            )
+            raise FileNotFoundError(f"Failed to download weights from {target_weights}")
         # After download, use the local file path
         ext = target_weights.split(".")[-1]
         target_weights = WEIGHTS_PATH + f"hip-yolo-us.{ext}"
     elif not os.path.exists(target_weights) and download_if_missing:
         print(f"Weights file {target_weights} not found. Downloading...")
         if not _download_weights(target_weights):
-            raise FileNotFoundError(
-                f"Failed to download weights to {target_weights}"
-            )
+            raise FileNotFoundError(f"Failed to download weights to {target_weights}")
 
     if not os.path.exists(target_weights):
-        raise FileNotFoundError(
-            f"Weights file {target_weights} does not exist"
-        )
+        raise FileNotFoundError(f"Weights file {target_weights} does not exist")
 
     print(f"Loading YOLO model from: {target_weights}")
     model = YOLO(target_weights, task="segment")
@@ -142,9 +134,7 @@ def yolo_predict_dcm_us(
         crop_coordinates=config.crop_coordinates,
         dicom_type=config.dicom_type,
     )
-    return yolo_predict_us(
-        dicom_images, keyphrase, model, custom_weights, imgsz, conf
-    )
+    return yolo_predict_us(dicom_images, keyphrase, model, custom_weights, imgsz, conf)
 
 
 def yolo_predict_us(
@@ -174,6 +164,4 @@ def yolo_predict_us(
 
 # Check weights exist on import (optional - can be removed if too strict)
 if not os.path.exists(WEIGHTS):
-    print(
-        f"Warning: {WEIGHTS} does not exist. Will attempt to download when needed."
-    )
+    print(f"Warning: {WEIGHTS} does not exist. Will attempt to download when needed.")
