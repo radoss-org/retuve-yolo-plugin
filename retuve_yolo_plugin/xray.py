@@ -13,9 +13,7 @@ from .utils import FILEDIR, shared_yolo_predict
 from .xray_utils import fit_triangle_to_mask
 
 WEIGHTS = f"{FILEDIR}/weights/hip-yolo-xray.pt"
-WEIGHTS = (
-    "/home/amcarth1/experiments/xray-experiments/runs/yolo-seg/weights/best.pt"
-)
+WEIGHTS = "/home/amcarth1/experiments/xray-experiments/runs/yolo-seg/weights/best.pt"
 # check weights file exists
 if not os.path.exists(WEIGHTS):
     sys.exit(f"Error: {WEIGHTS} does not exist")
@@ -80,8 +78,8 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
         tri_1 = seg_frame_objects[0]
         tri_2 = seg_frame_objects[1]
 
-        h_point_l, pel_l_o, pel_l_i, h_point_r, pel_r_o, pel_r_i = (
-            fit_triangle_to_mask(tri_1.points, tri_2.points)
+        h_point_l, pel_l_o, pel_l_i, h_point_r, pel_r_o, pel_r_i = fit_triangle_to_mask(
+            tri_1.points, tri_2.points
         )
 
         if h_point_l is None:
