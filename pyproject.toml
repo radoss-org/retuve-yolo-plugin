@@ -67,6 +67,14 @@ line-length = 88
 target-version = ['py310']
 include = '\.pyi?$'
 
+[tool.poe.tasks]
+test = "poetry run pytest -vv -n 4 ./tests"
+testgen = [
+    { cmd = "poetry install" },
+    { cmd = "poetry run python ./tests/_get_test_data.py" },
+]
+format = "poetry run black ."  # Add this line to run black on the entire codebase
+
 [tool.hatch.metadata]
 allow-direct-references = true
 

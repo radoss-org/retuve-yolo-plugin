@@ -30,8 +30,8 @@ jobs:
 
     - name: Check code formatting with black
       run: |
-        uv run black --check .
+        uv run poe format
 
     - name: Run tests
       run: |
-        uv run pytest -vv -n 4 ./tests
+        uv run poe test

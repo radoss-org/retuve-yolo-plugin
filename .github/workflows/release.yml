@@ -74,7 +74,7 @@ jobs:
           uv add --dev poethepoet
 
       - name: Run tests
-        run: uv run poe test_all
+        run: uv run poe test
 
   publish:
     runs-on: ubuntu-latest
