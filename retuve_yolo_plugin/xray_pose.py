@@ -15,6 +15,7 @@ from .utils import FILEDIR, yolo_predict_pose
 from .xray_utils import fit_triangle_to_mask
 
 WEIGHTS = f"{FILEDIR}/weights/hip-yolo-xray-v2.pt"
+WEIGHTS = "/home/amcarth1/experiments/xray-experiments/runs/yolo-pose/weights/best.pt"
 # check weights file exists
 if not os.path.exists(WEIGHTS):
     sys.exit(f"Error: {WEIGHTS} does not exist")
@@ -54,7 +55,7 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
         model,
         config,
         imgsz=800,
-        conf=0.6,
+        conf=0.5,
         stream=stream,
     )
 

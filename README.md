@@ -82,10 +82,43 @@ Users should select confidence thresholds based on their clinical priorities: wh
 
 ## Installation
 
-To install the plugin, you can use the following command:
+### From PyPI
+
+To install the plugin from PyPI:
+
+```bash
+uv pip install retuve-yolo-plugin
+```
+
+### From Source
+
+To install the plugin from source:
 
 ```bash
 pip install git+https://github.com/radoss-org/retuve-yolo-plugin.git
+```
+
+### Development Installation
+
+For development, clone the repository and install with uv:
+
+```bash
+git clone https://github.com/radoss-org/retuve-yolo-plugin.git
+cd retuve-yolo-plugin
+uv sync --dev
+```
+
+### Running Tests and Formatting
+
+```bash
+# Run tests
+uv run pytest -vv -n 4 ./tests
+
+# Format code
+uv run black .
+
+# Check formatting
+uv run black --check .
 ```
 
 ## Example Usage
