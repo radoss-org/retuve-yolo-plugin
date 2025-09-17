@@ -54,6 +54,7 @@ dev-dependencies = [
     "pytest-xdist>=3.6.1",
     "black>=25.1.0",
     "pytest>=7.0.0",
+    "poethepoet>=0.37.0",
 ]
 
 [tool.uv.sources]
