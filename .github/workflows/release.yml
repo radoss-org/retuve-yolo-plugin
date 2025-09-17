@@ -71,7 +71,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv sync
-          uv add --dev poethepoet
+          uv pip install poethepoet
 
       - name: Run tests
         run: uv run poe test
