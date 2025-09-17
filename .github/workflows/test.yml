@@ -24,6 +24,10 @@ jobs:
       with:
         version: "latest"
 
+    - name: Install poe
+      run: |
+        uv add --dev poethepoet
+
     - name: Install dependencies
       run: |
         uv sync --dev
