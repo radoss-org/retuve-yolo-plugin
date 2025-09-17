@@ -14,11 +14,10 @@ from retuve.logs import log_timings
 from .utils import FILEDIR, yolo_predict_pose
 from .xray_utils import fit_triangle_to_mask
 
-WEIGHTS = f"{FILEDIR}/weights/hip-yolo-xray-v2.pt"
-WEIGHTS = "/home/amcarth1/experiments/xray-experiments/runs/yolo-pose/weights/best.pt"
+WEIGHTS = f"{FILEDIR}/weights/v1.0/hip-yolo-xray-pose.pt"
 # check weights file exists
 if not os.path.exists(WEIGHTS):
-    sys.exit(f"Error: {WEIGHTS} does not exist")
+    raise FileNotFoundError(f"Weight file not found: {WEIGHTS}")
 
 
 def get_yolo_model_xray(config):
