@@ -27,7 +27,7 @@ classifiers = [
 ]
 keywords = ["yolo", "hip", "dysplasia", "medical", "ai", "segmentation"]
 dependencies = [
-    "retuve @ git+https://github.com/radoss-org/retuve.git",
+    "retuve>=1.0.0",
     "ultralytics>=8.2.48",
     "kaleido>=1.0.0",
 ]
