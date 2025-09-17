@@ -26,11 +26,12 @@ jobs:
 
     - name: Install poe
       run: |
+        uv pip install --system poethepoet
         uv pip install poethepoet
 
     - name: Check code formatting with black
       run: |
-        uv run poe format
+        poe format
 
     - name: Install dependencies
       run: |
