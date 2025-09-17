@@ -163,6 +163,42 @@ def yolo_predict_pose(
     return landmark_results, landmark_names
 
 
+import cv2
+import numpy as np
+
+
+def remove_bridges_keep_main(mask, thr=0.5):
+    """Remove 1px bridges and keep largest component. mask: (H,W) float or binary"""
+    # Convert to single channel if needed
+    if len(mask.shape) == 3:
+        mask = mask[:, :, 0]  # Take first channel
+
+    # Binarize
+    if mask.dtype != np.uint8:
+        mask = (mask >= thr).astype(np.uint8) * 255
+
+    # Remove 1px bridges with opening
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    opened = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+
+    # Keep largest component
+    num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(
+        opened, connectivity=8
+    )
+    if num_labels <= 1:
+        result = opened
+    else:
+        # Find largest (skip background at index 0)
+        areas = stats[1:, cv2.CC_STAT_AREA]
+        largest_idx = 1 + np.argmax(areas)
+        result = np.zeros_like(opened)
+        result[labels == largest_idx] = 255
+
+    # Convert back to 3-channel RGB
+    result = cv2.cvtColor(result, cv2.COLOR_GRAY2RGB)
+    return result
+
+
 def shared_yolo_predict(
     images,
     keyphrase,
@@ -235,6 +271,9 @@ def shared_yolo_predict(
             box = box.xyxy[0]
 
             mask = get_mask(points, img.shape)
+
+            # TODO: Make this functional without lowering ICC
+            # mask = remove_bridges_keep_main(mask)
 
             seg_obj = SegObject(points, clss, mask, box=box, conf=confidence)
             seg_frame_objects.append(seg_obj)

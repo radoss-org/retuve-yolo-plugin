@@ -11,8 +11,8 @@ from retuve_yolo_plugin.ultrasound import (
     yolo_predict_dcm_us,
 )
 from retuve_yolo_plugin.xray import yolo_predict_xray
-from retuve_yolo_plugin.xray_v2 import (
-    yolo_predict_xray as yolo_predict_xray_v2,
+from retuve_yolo_plugin.xray_pose import (
+    yolo_predict_xray as yolo_predict_xray_pose,
 )
 
 
@@ -73,6 +73,8 @@ def test_ultrasound_custom():
 
     assert hip_datas.grafs_hip.metrics[0].value > 0
 
+    video.write_videofile("test_ultrasound_custom.mp4")
+
 
 def test_xray():
 
@@ -92,7 +94,7 @@ def test_xray():
     assert hip.metrics[0].value > 0
 
 
-def test_xray_v2():
+def test_xray_pose():
 
     jpg_file = download_case(Cases.XRAY_JPG)[0]
 
@@ -103,7 +105,7 @@ def test_xray_v2():
     hip, *_ = analyse_hip_xray_2D(
         img,
         keyphrase=default_xray,
-        modes_func=yolo_predict_xray_v2,
+        modes_func=yolo_predict_xray_pose,
         modes_func_kwargs_dict={},
     )
 

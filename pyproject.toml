@@ -1,31 +1,65 @@
-[tool.poetry]
-name = "retuve_yolo_plugin"
-version = "0.2.0"
-description = ""
-authors = ["Sharpz7 <adam.mcarthur62@gmail.com>"]
-readme = "README.md"
-
 [build-system]
-requires = ["poetry-core>=1.0.8"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry.dependencies]
-python = ">=3.10,<3.13"
-retuve = { git = "https://github.com/radoss-org/retuve.git" }
-ultralytics = "^8.2.48"
-pytest-xdist = "^3.6.1"
-black = "^25.1.0"
-radstract = {git = "https://github.com/radoss-org/radstract.git"}
-requests = "^2.31.0"
-python-dotenv = "^1.0.0"
-
-[tool.poe.tasks]
-test = "poetry run pytest -vv -n 4 ./tests"
-testgen = [
-    { cmd = "poetry install" },
-    { cmd = "poetry run python ./tests/_get_test_data.py" },
+[project]
+name = "retuve-yolo-plugin"
+version = "1.0.0"
+description = "YOLO AI Plugin for Retuve hip dysplasia analysis"
+authors = [
+    {name = "Sharpz7", email = "adam.mcarthur62@gmail.com"},
 ]
-format = "poetry run black ."  # Add this line to run black on the entire codebase
+readme = "README.md"
+license = {text = "AGPL-3.0 AND CC-BY-NC-SA-3.0"}
+requires-python = ">=3.10,<3.13"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+keywords = ["yolo", "hip", "dysplasia", "medical", "ai", "segmentation"]
+dependencies = [
+    "retuve @ git+https://github.com/radoss-org/retuve.git",
+    "ultralytics>=8.2.48",
+    "radstract>=1.0.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+    "torch>=2.4.1",
+    "torchvision>=0.20.1",
+    "kaleido>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest-xdist>=3.6.1",
+    "black>=25.1.0",
+    "pytest>=7.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/radoss-org/retuve-yolo-plugin"
+Repository = "https://github.com/radoss-org/retuve-yolo-plugin"
+Documentation = "https://github.com/radoss-org/retuve"
+"Bug Tracker" = "https://github.com/radoss-org/retuve-yolo-plugin/issues"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest-xdist>=3.6.1",
+    "black>=25.1.0",
+    "pytest>=7.0.0",
+    "poethepoet>=0.37.0",
+]
+
+[tool.uv.sources]
+retuve = { git = "https://github.com/radoss-org/retuve.git" }
 
 [tool.pytest.ini_options]
 filterwarnings = ["ignore::DeprecationWarning"]
@@ -34,3 +68,17 @@ filterwarnings = ["ignore::DeprecationWarning"]
 line-length = 88
 target-version = ['py310']
 include = '\.pyi?$'
+
+[tool.poe.tasks]
+test = "uv run pytest -vv -n 4 ./tests"
+testgen = [
+    { cmd = "uv sync" },
+    { cmd = "uv run python ./tests/_get_test_data.py" },
+]
+format = "uv run black ."  # Add this line to run black on the entire codebase
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["retuve_yolo_plugin"]

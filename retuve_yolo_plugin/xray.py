@@ -12,11 +12,10 @@ from retuve.logs import log_timings
 from .utils import FILEDIR, shared_yolo_predict
 from .xray_utils import fit_triangle_to_mask
 
-WEIGHTS = f"{FILEDIR}/weights/hip-yolo-xray.pt"
-
+WEIGHTS = f"{FILEDIR}/weights/v1.0/hip-yolo-xray-seg.pt"
 # check weights file exists
 if not os.path.exists(WEIGHTS):
-    sys.exit(f"Error: {WEIGHTS} does not exist")
+    raise FileNotFoundError(f"Weight file not found: {WEIGHTS}")
 
 
 def get_yolo_model_xray(config):
@@ -51,8 +50,8 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
         WEIGHTS,
         model,
         config,
-        imgsz=1000,
-        conf=0.6,
+        imgsz=800,
+        conf=0.5,
         stream=stream,
     )
 
@@ -78,8 +77,8 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
         tri_1 = seg_frame_objects[0]
         tri_2 = seg_frame_objects[1]
 
-        h_point_l, pel_l_o, pel_l_i, h_point_r, pel_r_o, pel_r_i = fit_triangle_to_mask(
-            tri_1.points, tri_2.points
+        h_point_l, pel_l_o, pel_l_i, h_point_r, pel_r_o, pel_r_i = (
+            fit_triangle_to_mask(tri_1.points, tri_2.points)
         )
 
         if h_point_l is None:
