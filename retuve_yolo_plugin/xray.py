@@ -77,8 +77,8 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
         tri_1 = seg_frame_objects[0]
         tri_2 = seg_frame_objects[1]
 
-        h_point_l, pel_l_o, pel_l_i, h_point_r, pel_r_o, pel_r_i = (
-            fit_triangle_to_mask(tri_1.points, tri_2.points)
+        h_point_l, pel_l_o, pel_l_i, h_point_r, pel_r_o, pel_r_i = fit_triangle_to_mask(
+            tri_1.points, tri_2.points
         )
 
         if h_point_l is None:

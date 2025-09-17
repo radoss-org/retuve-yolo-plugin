@@ -29,11 +29,6 @@ keywords = ["yolo", "hip", "dysplasia", "medical", "ai", "segmentation"]
 dependencies = [
     "retuve @ git+https://github.com/radoss-org/retuve.git",
     "ultralytics>=8.2.48",
-    "radstract>=1.0.0",
-    "requests>=2.31.0",
-    "python-dotenv>=1.0.0",
-    "torch>=2.4.1",
-    "torchvision>=0.20.1",
     "kaleido>=1.0.0",
 ]
 
@@ -75,7 +70,7 @@ testgen = [
     { cmd = "uv sync" },
     { cmd = "uv run python ./tests/_get_test_data.py" },
 ]
-format = "uv run black ."  # Add this line to run black on the entire codebase
+format = "black ."  # Add this line to run black on the entire codebase
 
 [tool.hatch.metadata]
 allow-direct-references = true

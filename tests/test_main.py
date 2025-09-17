@@ -61,7 +61,7 @@ def test_ultrasound_custom():
 
     model = get_yolo_model_us(
         default_US,
-        weights_path="https://github.com/radoss-org/retuve-yolo-plugin/raw/refs/heads/main/retuve_yolo_plugin/weights/hip-yolo-us.pt",
+        weights_path="https://github.com/radoss-org/retuve-yolo-plugin/raw/refs/heads/main/retuve_yolo_plugin/weights/v1.0/hip-yolo-us.pt",
     )
 
     hip_datas, video, *_ = analyse_hip_3DUS(
