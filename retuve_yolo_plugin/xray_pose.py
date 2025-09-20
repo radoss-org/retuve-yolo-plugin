@@ -31,9 +31,7 @@ def yolo_predict_dcm_xray(dcm, keyphrase, model=None):
     return yolo_predict_xray(dicom_images, keyphrase, model, config)
 
 
-def yolo_predict_xray(
-    images, keyphrase, model=None, stream=False, imgsz=800, conf=0.5
-):
+def yolo_predict_xray(images, keyphrase, model=None, stream=False, imgsz=800, conf=0.5):
     config = Config.get_config(keyphrase)
 
     landmark_results = []
