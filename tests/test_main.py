@@ -10,7 +10,7 @@ from retuve_yolo_plugin.ultrasound import (
     get_yolo_model_us,
     yolo_predict_dcm_us,
 )
-from retuve_yolo_plugin.xray import yolo_predict_xray
+from retuve_yolo_plugin.xray import yolo_predict_xray, get_yolo_model_xray
 from retuve_yolo_plugin.xray_pose import (
     yolo_predict_xray as yolo_predict_xray_pose,
 )
@@ -73,7 +73,7 @@ def test_ultrasound_custom():
 
     assert hip_datas.grafs_hip.metrics[0].value > 0
 
-    video.write_videofile("test_ultrasound_custom.mp4")
+    # video.write_videofile("test_ultrasound_custom.mp4")
 
 
 def test_xray():
@@ -94,6 +94,28 @@ def test_xray():
     assert hip.metrics[0].value > 0
 
 
+def test_xray_custom():
+    jpg_file = download_case(Cases.XRAY_JPG)[0]
+
+    default_xray.device = "cpu"
+
+    img = Image.open(jpg_file)
+
+    model = get_yolo_model_xray(
+        default_xray,
+        weights_path="https://github.com/radoss-org/retuve-yolo-plugin/blob/main/retuve_yolo_plugin/weights/v1.0/hip-yolo-xray-seg.pt",
+    )
+
+    hip, *_ = analyse_hip_xray_2D(
+        img,
+        keyphrase=default_xray,
+        modes_func=yolo_predict_xray,
+        modes_func_kwargs_dict={"model": model, "imgsz": 512, "conf": 0.6},
+    )
+
+    assert hip.metrics[0].value > 0
+
+
 def test_xray_pose():
 
     jpg_file = download_case(Cases.XRAY_JPG)[0]
@@ -107,6 +129,28 @@ def test_xray_pose():
         keyphrase=default_xray,
         modes_func=yolo_predict_xray_pose,
         modes_func_kwargs_dict={},
+    )
+
+    assert hip.metrics[0].value > 0
+
+
+def test_xray_pose_custom():
+    jpg_file = download_case(Cases.XRAY_JPG)[0]
+
+    default_xray.device = "cpu"
+
+    img = Image.open(jpg_file)
+
+    model = get_yolo_model_xray(
+        default_xray,
+        weights_path="https://github.com/radoss-org/retuve-yolo-plugin/blob/main/retuve_yolo_plugin/weights/v1.0/hip-yolo-xray-pose.pt",
+    )
+
+    hip, *_ = analyse_hip_xray_2D(
+        img,
+        keyphrase=default_xray,
+        modes_func=yolo_predict_xray_pose,
+        modes_func_kwargs_dict={"model": model, "imgsz": 512, "conf": 0.6},
     )
 
     assert hip.metrics[0].value > 0

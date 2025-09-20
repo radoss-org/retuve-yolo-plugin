@@ -3,3 +3,4 @@ __pycache__
 retuve-data
 .env
 .venv
+.vscode
