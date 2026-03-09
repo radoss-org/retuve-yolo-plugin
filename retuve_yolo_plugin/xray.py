@@ -9,22 +9,14 @@ from retuve.hip_xray.classes import HipLabelsXray, LandmarksXRay
 from retuve.keyphrases.config import Config
 from retuve.logs import log_timings
 
-from .utils import FILEDIR, shared_yolo_predict
+from .utils import FILEDIR, shared_yolo_predict, get_yolo_model
 from .xray_utils import fit_triangle_to_mask
 
 WEIGHTS = f"{FILEDIR}/weights/v1.0/hip-yolo-xray-seg.pt"
-# check weights file exists
-if not os.path.exists(WEIGHTS):
-    raise FileNotFoundError(f"Weight file not found: {WEIGHTS}")
 
 
-def get_yolo_model_xray(config):
-    from ultralytics import YOLO
-
-    model = YOLO(WEIGHTS, task="segment")
-    model.to(config.device)
-
-    return model
+def get_yolo_model_xray(config, weights_path=None, download_if_missing=True):
+    return get_yolo_model(config, WEIGHTS, weights_path, download_if_missing)
 
 
 def yolo_predict_dcm_xray(dcm, keyphrase, model=None):
@@ -39,7 +31,7 @@ def yolo_predict_dcm_xray(dcm, keyphrase, model=None):
     return yolo_predict_xray(dicom_images, keyphrase, model, config)
 
 
-def yolo_predict_xray(images, keyphrase, model=None, stream=False):
+def yolo_predict_xray(images, keyphrase, model=None, stream=False, imgsz=800, conf=0.5):
     config = Config.get_config(keyphrase)
 
     landmark_results = []
@@ -50,8 +42,8 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
         WEIGHTS,
         model,
         config,
-        imgsz=800,
-        conf=0.5,
+        imgsz=imgsz,
+        conf=conf,
         stream=stream,
     )
 
