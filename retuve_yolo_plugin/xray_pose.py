@@ -10,7 +10,7 @@ from retuve.classes.seg import SegFrameObjects
 from retuve.hip_xray.classes import LandmarksXRay
 from retuve.keyphrases.config import Config
 
-from .utils import FILEDIR, yolo_predict_pose, get_yolo_model
+from .utils import FILEDIR, get_yolo_model, yolo_predict_pose
 
 WEIGHTS = f"{FILEDIR}/weights/v1.0/hip-yolo-xray-pose.pt"
 
@@ -50,6 +50,16 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False, imgsz=800, co
 
     for i, landmarks in enumerate(landmarks_list):
         landmarks_obj = LandmarksXRay()
+        landmarks = [(int(x), int(y)) for (x, y) in landmarks]
+
+        if len(landmarks) != 8:
+            seg_results.append(
+                SegFrameObjects(
+                    img=np.array(images[i]),
+                    seg_objects=None,
+                )
+            )
+            continue
 
         (
             landmarks_obj.pel_l_o,
@@ -61,6 +71,7 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False, imgsz=800, co
             landmarks_obj.fem_r,
             landmarks_obj.h_point_r,
         ) = landmarks
+
         landmark_results.append(landmarks_obj)
 
         seg_results.append(

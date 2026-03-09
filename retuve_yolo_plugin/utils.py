@@ -5,12 +5,12 @@ import time
 
 import cv2
 import numpy as np
+import requests
 import torch
+from dotenv import load_dotenv
 from retuve.classes.seg import SegFrameObjects, SegObject
 from retuve.keyphrases.config import Config
 from retuve.logs import ulogger
-import requests
-from dotenv import load_dotenv
 
 FILEDIR = os.path.abspath(f"{os.path.dirname(os.path.abspath(__file__))}/")
 WEIGHTS_PATH = f"{FILEDIR}/weights/v1.0/"
@@ -32,7 +32,7 @@ def predict(
     device=None,
     model=None,
     stream=False,
-    chunk_size=1,  # Default chunk size
+    reduce_memory=False,
 ):
     """
     Predict the DICOM using a YOLO model with chunking support.
@@ -50,23 +50,34 @@ def predict(
 
     start = time.time()
 
-    # Function to process images in chunks
-    def process_in_chunks(images, chunk_size):
-        for i in range(0, len(images), chunk_size):
-            yield images[i : i + chunk_size]
-
     all_results = []
 
-    for chunk in process_in_chunks(images, chunk_size):
+    for image in images:
+
         results = model.predict(
-            chunk,
+            [image],
             imgsz=imgsz,
             conf=conf,
             verbose=False,
             stream=stream,
             retina_masks=True,
+            device=device,
         )
-        all_results.extend(results)  # Combine results from all chunks
+
+        if len(all_results) == 0:
+            all_results.extend(results)
+            continue
+
+        # If reduce_memory is True, only keep detections with at least one box
+        if reduce_memory:
+            filtered = [
+                r for r in results if len(r.boxes) > 0
+            ]  # Each result has .boxes tensor
+            all_results.extend(filtered)
+        else:
+            all_results.extend(results)
+
+        del results
 
     ulogger.info(f"YOLO Segmentation model time: {time.time() - start:.2f}s")
 
@@ -88,7 +99,7 @@ def yolo_predict_pose(
 
     landmark_results = []
 
-    if not model:
+    if model == None:
         from ultralytics import YOLO
 
         model = YOLO(default_weights)
@@ -103,6 +114,8 @@ def yolo_predict_pose(
         conf=conf,
         stream=stream,
     )
+
+    print(results[0].keypoints)
 
     # Prepare storage for best detections
     best_detections = {
@@ -148,7 +161,13 @@ def yolo_predict_pose(
             best_detections["right"][1]["keypoints"],
         ]
 
-        frame_landmarks = [item for sublist in frame_landmarks for item in sublist]
+        frame_landmarks = [
+            list(item)
+            for sublist in frame_landmarks
+            if sublist is not None
+            for item in sublist
+            if item is not None
+        ]
 
         landmark_results.append(frame_landmarks)
 
@@ -162,6 +181,8 @@ def yolo_predict_pose(
         "h_point_r",
         "fem_r",
     ]
+
+    print(landmark_results)
 
     return landmark_results, landmark_names
 
@@ -211,6 +232,7 @@ def shared_yolo_predict(
     imgsz=512,
     conf=0.8,
     stream=False,
+    reduce_memory=False,
 ):
 
     if not config:
@@ -218,7 +240,7 @@ def shared_yolo_predict(
 
     seg_results = []
 
-    if not model:
+    if model == None:
         from ultralytics import YOLO
 
         model = YOLO(default_weights, task="segment")
@@ -235,6 +257,7 @@ def shared_yolo_predict(
                 device=config.device,
                 conf=conf,
                 stream=stream,
+                reduce_memory=reduce_memory,
             )
             break
         except torch.cuda.OutOfMemoryError:
@@ -276,7 +299,7 @@ def shared_yolo_predict(
             mask = get_mask(points, img.shape)
 
             # TODO: Make this functional without lowering ICC
-            # mask = remove_bridges_keep_main(mask)
+            mask = remove_bridges_keep_main(mask)
 
             seg_obj = SegObject(points, clss, mask, box=box, conf=confidence)
             seg_frame_objects.append(seg_obj)
