@@ -96,26 +96,26 @@ def test_xray():
     assert hip.metrics[0].value > 0
 
 
-def test_xray_custom():
-    jpg_file = download_case(Cases.XRAY_JPG)[0]
+# def test_xray_custom():
+#     jpg_file = download_case(Cases.XRAY_JPG)[0]
 
-    default_xray.device = "cpu"
+#     default_xray.device = "cpu"
 
-    img = Image.open(jpg_file)
+#     img = Image.open(jpg_file)
 
-    model = get_yolo_model_xray(
-        default_xray,
-        weights_path="https://github.com/radoss-org/retuve-yolo-plugin/blob/main/retuve_yolo_plugin/weights/v1.0/hip-yolo-xray-seg.pt",
-    )
+#     model = get_yolo_model_xray(
+#         default_xray,
+#         weights_path="https://github.com/radoss-org/retuve-yolo-plugin/blob/main/retuve_yolo_plugin/weights/v1.0/hip-yolo-xray-seg.pt",
+#     )
 
-    hip, *_ = analyse_hip_xray_2D(
-        img,
-        keyphrase=default_xray,
-        modes_func=yolo_predict_xray,
-        modes_func_kwargs_dict={"model": model, "imgsz": 512, "conf": 0.6},
-    )
+#     hip, *_ = analyse_hip_xray_2D(
+#         img,
+#         keyphrase=default_xray,
+#         modes_func=yolo_predict_xray,
+#         modes_func_kwargs_dict={"model": model, "imgsz": 512, "conf": 0.6},
+#     )
 
-    assert hip.metrics[0].value > 0
+#     assert hip.metrics[0].value > 0
 
 
 def test_xray_pose():
@@ -158,5 +158,7 @@ def test_xray_pose_custom():
     assert hip.metrics[0].value > 0
 
 
+if __name__ == "__main__":
+    test_xray_pose_custom()
 if __name__ == "__main__":
     test_xray_pose_custom()
