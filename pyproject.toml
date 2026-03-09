@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "retuve-yolo-plugin"
-version = "1.0.0"
+version = "1.1.0"
 description = "YOLO AI Plugin for Retuve hip dysplasia analysis"
 authors = [
     {name = "Sharpz7", email = "adam.mcarthur62@gmail.com"},
