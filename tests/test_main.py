@@ -73,8 +73,6 @@ def test_ultrasound_custom():
 
     assert hip_datas.grafs_hip.metrics[0].value > 0
 
-    video.write_videofile("test_ultrasound_custom.mp4")
-
 
 def test_xray():
 
