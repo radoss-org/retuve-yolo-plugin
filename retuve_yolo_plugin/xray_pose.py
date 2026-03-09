@@ -6,13 +6,11 @@ import time
 
 import numpy as np
 from radstract.data.dicom import convert_dicom_to_images
-from retuve.classes.seg import SegFrameObjects, SegObject
-from retuve.hip_xray.classes import HipLabelsXray, LandmarksXRay
+from retuve.classes.seg import SegFrameObjects
+from retuve.hip_xray.classes import LandmarksXRay
 from retuve.keyphrases.config import Config
-from retuve.logs import log_timings
 
 from .utils import FILEDIR, yolo_predict_pose
-from .xray_utils import fit_triangle_to_mask
 
 WEIGHTS = f"{FILEDIR}/weights/v1.0/hip-yolo-xray-pose.pt"
 # check weights file exists
@@ -41,7 +39,9 @@ def yolo_predict_dcm_xray(dcm, keyphrase, model=None):
     return yolo_predict_xray(dicom_images, keyphrase, model, config)
 
 
-def yolo_predict_xray(images, keyphrase, model=None, stream=False):
+def yolo_predict_xray(
+    images, keyphrase, model=None, stream=False, imgsz=800, conf=0.5
+):
     config = Config.get_config(keyphrase)
 
     landmark_results = []
@@ -60,6 +60,16 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
 
     for i, landmarks in enumerate(landmarks_list):
         landmarks_obj = LandmarksXRay()
+        landmarks = [(int(x), int(y)) for (x, y) in landmarks]
+
+        if len(landmarks) != 8:
+            seg_results.append(
+                SegFrameObjects(
+                    img=np.array(images[i]),
+                    seg_objects=None,
+                )
+            )
+            continue
 
         (
             landmarks_obj.pel_l_o,
@@ -71,6 +81,7 @@ def yolo_predict_xray(images, keyphrase, model=None, stream=False):
             landmarks_obj.fem_r,
             landmarks_obj.h_point_r,
         ) = landmarks
+
         landmark_results.append(landmarks_obj)
 
         seg_results.append(

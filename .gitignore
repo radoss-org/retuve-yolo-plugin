@@ -3,3 +3,7 @@ __pycache__
 retuve-data
 .env
 .venv
+.vscode
+
+hip-yolo-us-custom.onnx
+retuve_yolo_plugin/weights/v1.0/hip-yolo-us-custom.pt
